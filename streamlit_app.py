@@ -18,7 +18,7 @@ with st.expander("How to use this app"):
     Step 2: Weigh the different parts  
     Step 3: Click "Predict Age" to get results  
 
-    The app will predict the number of rings, which indicates the abalone's age.
+    The app will predict the number of rings, which indicates the abalone's age (Rings + 1.5 = Age).
     """)
 
 ## Create two columns
