@@ -131,7 +131,7 @@ if st.button("Predict Age", type="primary"):
     # Heavy for size check (warning/error thresholds)
     density_score = whole_weight / (length * diameter * height + 1e-8)
     if density_score > 400:
-        errors.append("This combination looks physically unrealistic (very heavy for its size).")
+        warnings.append("This combination looks physically unrealistic (very heavy for its size).")
     elif density_score > 200:
         warnings.append("This combination looks unusual (heavy for its size). Please double-check.")
 
