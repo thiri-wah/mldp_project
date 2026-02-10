@@ -163,7 +163,7 @@ if st.button("Predict Age", type="primary"):
 
     # Align columns exactly to model expectation
     expected_cols = list(model.feature_names_in_)
-    df_input = df_input.reindex(columns=expected_cols)
+    df_input = df_input.reindex(columns=expected_cols, fill_value=0)
 
     # Predict
     y_pred = model.predict(df_input)[0]
