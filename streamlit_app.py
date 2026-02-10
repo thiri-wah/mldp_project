@@ -96,13 +96,52 @@ with col2:
 ## Predict button
 if st.button("Predict Age", type="primary"):
 
-    # Validation 1: all zeros 
+    # Validation: all zeros
     if length == 0 and diameter == 0 and height == 0 and whole_weight == 0:
         st.error("Invalid input. Please enter measurements for your abalone.")
         st.info("Tip: Adjust the sliders to match your abalone's actual measurements.")
 
     else:
-        # Validation 2: parts cannot exceed whole weight
+      
+        errors = []
+        warnings = []
+
+        # Hard impossible: any part cannot be greater than whole
+        if shucked_weight > whole_weight:
+            errors.append("Invalid weights: Shucked Weight cannot exceed Whole Weight.")
+        if viscera_weight > whole_weight:
+            errors.append("Invalid weights: Viscera Weight cannot exceed Whole Weight.")
+        if shell_weight > whole_weight:
+            errors.append("Invalid weights: Shell Weight cannot exceed Whole Weight.")
+
+        # Zero dimension but positive weight is not realistic
+        if (length == 0 or diameter == 0 or height == 0) and whole_weight > 0:
+            errors.append("Invalid dimensions: If any dimension is 0, Whole Weight should be 0.")
+
+        # Unusual dimension relationships (warnings only)
+        if diameter > length and length > 0:
+            warnings.append("Unusual shape: Diameter is usually not larger than Length. Please double-check.")
+        if height > diameter and diameter > 0:
+            warnings.append("Unusual shape: Height is usually not larger than Diameter. Please double-check.")
+
+        # "Heavy for its size" density-like check (warning/error thresholds)
+        density_score = whole_weight / (length * diameter * height + 1e-8)
+        if density_score > 400:
+            errors.append("This combination looks physically unrealistic (very heavy for its size).")
+        elif density_score > 200:
+            warnings.append("This combination looks unusual (heavy for its size). Please double-check.")
+
+        if errors:
+            for msg in errors:
+                st.error(msg)
+            st.stop()
+
+        if warnings:
+            for msg in warnings:
+                st.warning(msg)
+
+        # Validation: parts cannot exceed whole weight (your original)
+    
         parts_sum = shucked_weight + viscera_weight + shell_weight
 
         if parts_sum > whole_weight:
